@@ -1,0 +1,79 @@
+#Find the min, max, average and count for release_year
+SELECT MIN (release_year) AS release_year_min,
+MAX (release_year) AS release_year_max,
+AVG (release_year) AS release_year_avg,
+COUNT (release_year),
+COUNT (*)
+FROM film
+
+#Find the min, max, average and count for rental_duration
+SELECT MIN (rental_duration) AS rental_duration_min,
+MAX (rental_duration) AS rental_duration_max,
+AVG (rental_duration) AS rental_duration_avg,
+COUNT (rental_duration),
+COUNT (*)
+FROM film
+
+#Find the min, max, average and count for rental_rate
+SELECT MIN (rental_rate) AS rental_rate_min,
+MAX (rental_rate) AS rental_rate_max,
+AVG (rental_rate) AS rental_rate_avg,
+COUNT (rental_rate),
+COUNT (*)
+FROM film
+
+#Find the min, max, average and count for length
+SELECT MIN (length) AS length_min,
+MAX (length) AS length_max,
+AVG (length) AS length_avg,
+COUNT (length),
+COUNT (*)
+FROM film
+
+#Find the min, max, average and count for replacement_cost
+SELECT MIN (replacement_cost) AS replacement_cost_min,
+MAX (replacement_cost) AS replacement_cost_max,
+AVG (replacement_cost) AS replacement_cost_avg,
+COUNT (replacement_cost),
+COUNT (*)
+FROM film
+
+#Find the Top 10 countries in terms of customer numbers
+SELECT D.country,
+COUNT(customer_id) AS number_of_customers
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_id = D.country_id
+GROUP BY country
+ORDER BY COUNT(customer_id) DESC
+LIMIT 10
+
+#Top 10 cities within the Top 10 countries
+SELECT C.city,
+D.country,
+COUNT(customer_id) AS number_of_customers
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_id = D.country_id
+WHERE country IN ('India','China','United_States','Japan','Mexico','Brazil','Russian_Federation','Phillippines','Turkey','Indonesia')
+GROUP BY city, country
+ORDER BY COUNT(customer_id) DESC
+LIMIT 10
+
+#Top 5 customers in the Top 10 cities who paid the highest total amounts
+SELECT B.first_name,
+B.last_name,
+D.city,
+E.country,
+SUM(amount) AS total_payments_amount
+FROM payment A
+INNER JOIN customer B ON A.customer_id = B.customer_id
+INNER JOIN address C ON B.address_id = C.address_id
+INNER JOIN city D ON C.city_id = D.city_id
+INNER JOIN country E ON D.country_id = E.country_id
+WHERE city IN ('Atlixco','Pingxiang','Adoni','Dhule(Dhulia)','Kurashiki','Xintai','Sivas','Celaya','Nezahualcyotl','So_Leopoldo')
+GROUP BY city, country, first_name, last_name
+ORDER BY SUM(amount) DESC
+LIMIT 5
